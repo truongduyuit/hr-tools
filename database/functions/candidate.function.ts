@@ -1,6 +1,6 @@
 import { MongooseBaseService } from "..";
 import { Candidate, ICandidateModel } from "../models";
 
-export const CandidateFuntions = Object.freeze(
+export const CandidateFunctions = Object.freeze(
   new MongooseBaseService<ICandidateModel>(Candidate)
 );

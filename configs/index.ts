@@ -3,7 +3,7 @@ import { ICandidateConfig } from "../type";
 export const CandidateConfig: { [key: string]: ICandidateConfig } = {
   A: {
     label: "Thời gian apply",
-    key: "applyTime",
+    key: "timeApply",
     column: "A",
   },
   B: {
@@ -91,4 +91,14 @@ export const CandidateConfig: { [key: string]: ICandidateConfig } = {
     key: "linkCV",
     column: "T",
   },
+  U: {
+    label: "Store",
+    key: "store",
+    column: "U",
+  },
+  V: {
+    label: "PIC",
+    key: "pic",
+    column: "V",
+  }
 };

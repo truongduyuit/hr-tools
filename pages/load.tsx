@@ -1,13 +1,17 @@
-import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useToast, Center } from "@chakra-ui/react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as XLSX from "xlsx";
 import Candidate from "../components/candidateData";
 import Sidebar from "../components/sidebar";
 import { setLoading } from "../redux/appSlide";
+import axios from "axios";
+import { CandidateConfig } from "../configs";
 
 export default function App() {
+    const toast = useToast()
     const dispatch = useDispatch()
+
     const [data, setData] = useState<any[]>()
 
     const onChange = (e: any) => {
@@ -33,15 +37,54 @@ export default function App() {
             reader.readAsBinaryString(file);
     };
 
-    const onSave = () => {
+    const onSave = async () => {
         dispatch(setLoading(true))
 
         try {
-            
+            const candidates = data?.map(i => {
+                let candidate = {}
+                Object.keys(i).forEach((key) => {
+                    if (CandidateConfig[key]) {
+                        const field = CandidateConfig[key].key
+                        candidate = { ...candidate, [field]: key === "A" ? JSON.stringify(i?.[key]).replaceAll('"', '') : i?.[key] }
+                    }
+                })
+                return candidate
+            })
+
+            const result = await axios.post("/api/candidate", {
+                candidates
+            })
+
+            if (result && result.data.isSuccess) {
+                toast({
+                    title: 'Thêm dữ liệu ứng viên thành công',
+                    description: `Đã thêm ${data?.length} ứng viên`,
+                    status: 'success',
+                    duration: 5000,
+                    isClosable: true,
+                    position: "bottom-right"
+                })
+            } else {
+                toast({
+                    title: 'Thêm dữ liệu ứng viên thất bại',
+                    status: 'error',
+                    duration: 5000,
+                    isClosable: true,
+                    position: "bottom-right"
+                })
+            }
 
             setData([])
         } catch (error) {
-
+            toast({
+                title: 'Thêm dữ liệu ứng viên thất bại',
+                description: error,
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+                position: "bottom-right"
+            })
         }
 
         dispatch(setLoading(false))
@@ -67,7 +110,7 @@ export default function App() {
                     <TableContainer mt={5} >
                         <Table w="full" overflowX="auto">
                             <Thead>
-                                <Tr bgColor='blue'>
+                                <Tr bgColor='teal'>
                                     <Th color="#fff">Họ và Tên</Th>
                                     <Th color="#fff">SĐT</Th>
                                     <Th color="#fff">Vị trí apply</Th>
@@ -87,7 +130,6 @@ export default function App() {
                     </TableContainer>
                 </Flex>
             </Flex>
-
         </div >
     );
 }

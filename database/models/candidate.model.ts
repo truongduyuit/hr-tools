@@ -13,12 +13,17 @@ export interface ICandidateModel extends mongoose.Document {
   heightWeight: string;
   know: string;
   time: string;
+  timeApply: string;
   exp: string;
   desiredSalary: string;
   ssRotate: string;
   ssWorkTime: string;
   brand: string;
   linkCV: string;
+  store: string;
+  pic: string;
+  haveSchedule: boolean
+  scheduleId: string
 }
 
 const schema = new mongoose.Schema(
@@ -60,6 +65,10 @@ const schema = new mongoose.Schema(
     time: {
       type: String,
     },
+    timeApply: {
+      type: String,
+      index: true
+    },
     exp: {
       type: String,
     },
@@ -79,12 +88,33 @@ const schema = new mongoose.Schema(
     linkCV: {
       type: String,
     },
+    store: {
+      type: String,
+    },
+    pic: {
+      type: String
+    },
+    haveSchedule: {
+      type: Boolean,
+      default: false
+    },
+    scheduleId: { type: mongoose.Types.ObjectId },
   },
   {
     collection: "candidate",
     timestamps: true,
   }
 );
+
+schema.virtual("scheduleInfo", {
+  ref: "schedule",
+  localField: "scheduleId",
+  foreignField: "_id",
+  justOne: true,
+});
+
+schema.set("toObject", { virtuals: true });
+schema.set("toJSON", { virtuals: true });
 
 export const Candidate =
   mongoose.models.candidate ||

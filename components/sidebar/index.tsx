@@ -1,13 +1,15 @@
 import {
     Flex, IconButton
 } from '@chakra-ui/react'
-import { FiCalendar, FiHome, FiMenu } from 'react-icons/fi'
+import { useRouter } from 'next/router'
+import { FiCalendar, FiUserPlus, FiHome, FiMenu } from 'react-icons/fi'
 import { useDispatch, useSelector } from 'react-redux'
 import { setNavSize } from '../../redux/appSlide'
 import { RootState } from '../../redux/store'
 import NavItem from './SidebarItem'
 
 export default function Sidebar() {
+    const router = useRouter()
     const dispatch = useDispatch();
 
     const navSize = useSelector((state: RootState) => state.app.navSize)
@@ -45,12 +47,10 @@ export default function Sidebar() {
                             dispatch(setNavSize("small"))
                     }}
                 />
-                <NavItem navSize={navSize} icon={FiHome} title="Bảng điều khiển" />
-                <NavItem navSize={navSize} icon={FiCalendar} title="Thêm dữ liệu" active />
-
+                <NavItem href="/dashboard" navSize={navSize} icon={FiHome} title="Bảng điều khiển"  active={router.pathname === "/dashboard"}/>
+                <NavItem href="/load" navSize={navSize} icon={FiUserPlus} title="Thêm ứng viên" active={router.pathname === "/load"} />
+                <NavItem href="/candidate" navSize={navSize} icon={FiCalendar} title="QL ứng viên" active={router.pathname === "/candidate"} />
             </Flex>
-
-
         </Flex>
     )
 }

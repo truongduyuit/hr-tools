@@ -158,6 +158,11 @@ export class MongooseBaseService<IMongooseModel extends Document> {
     return doc;
   }
 
+  async insertMany(data: any[]) : Promise<any> {
+    const docs = await this._mongooseModel.insertMany(data)
+    return docs
+  }
+
   async populate(iPopulate: IPopulate): Promise<{
     records: IMongooseModel[];
     metadata: {

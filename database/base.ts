@@ -159,6 +159,7 @@ export class MongooseBaseService<IMongooseModel extends Document> {
   }
 
   async insertMany(data: any[]) : Promise<any> {
+    if (!data.length) return [];
     const docs = await this._mongooseModel.insertMany(data)
     return docs
   }

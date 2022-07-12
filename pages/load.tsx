@@ -1,18 +1,18 @@
-import { Box, Button, Flex, Table, TableContainer, Tbody, Td, Th, Thead, Tr, useToast, Center } from "@chakra-ui/react";
+import { Button, Flex, Table, TableContainer, Tbody, Th, Thead, Tr, useToast } from "@chakra-ui/react";
+import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import * as XLSX from "xlsx";
 import Candidate from "../components/candidateData";
 import Sidebar from "../components/sidebar";
-import { setLoading } from "../redux/appSlide";
-import axios from "axios";
 import { CandidateConfig } from "../configs";
+import { setLoading } from "../redux/appSlide";
 
-export default function App() {
+export default function Load() {
     const toast = useToast()
     const dispatch = useDispatch()
 
-    const [data, setData] = useState<any[]>()
+    const [data, setData] = useState<any[]>([])
 
     const onChange = (e: any) => {
         const [file] = e.target.files;
@@ -102,7 +102,7 @@ export default function App() {
                     <Flex justify={'space-around'}>
                         <input type="file" onChange={onChange} />
 
-                        <Button colorScheme="teal" w="5rem" onClick={onSave}>
+                        <Button colorScheme="teal" w="5rem" onClick={onSave} disabled={!data.length}>
                             Lưu
                         </Button>
                     </Flex>

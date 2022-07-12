@@ -26,7 +26,7 @@ export default async function handler(
             },
             populate: {
                 path: "scheduleInfo",
-                select: "*"
+                select: "workAddress interviewAddress date note"
             }
         })
         return res.status(200).json({ value: result, isSuccess: true })

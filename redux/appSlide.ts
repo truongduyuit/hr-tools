@@ -16,14 +16,14 @@ export const appSlice = createSlice({
   name: "app",
   initialState,
   reducers: {
-    setLoading: (state, action: PayloadAction<boolean>) => {
+    setLoading: (state: AppState, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
-    setOpenModal: (state, action: PayloadAction<boolean | undefined>) => {
+    setOpenModal: (state: AppState, action: PayloadAction<boolean | undefined>) => {
       state.modalOpened = action.payload;
     },
-    setNavSize: (state, action: PayloadAction<string>) => {
-        state.navSize = action.payload;
+    setNavSize: (state: AppState, action: PayloadAction<string>) => {
+      state.navSize = action.payload;
     }
   },
 });

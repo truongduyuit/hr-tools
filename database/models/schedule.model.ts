@@ -3,26 +3,31 @@ import mongoose from "mongoose";
 export interface IScheduleModel extends mongoose.Document {
     _id: mongoose.Types.ObjectId;
     candidateId: string;
-    branchWorkAddress: string;
-    branchInterviewAddress: string;
+    workAddress: string;
+    interviewAddress: string;
     date: Date;
     note: string;
+    isPass: string;
 }
 
 const schema = new mongoose.Schema(
     {
         candidateId: { type: mongoose.Types.ObjectId },
-        branchWorkAddress: { type: String },
-        branchInterviewAddress: { type: String },
+        workAddress: { type: String },
+        interviewAddress: { type: String },
         date: {
             type: Date
         },
         note: {
             type: String
+        },
+        isPass: {
+            type: String,
+            default: "Chưa có kết quả"
         }
     },
     {
-        collection: "candidate",
+        collection: "schedule",
         timestamps: true,
     }
 );

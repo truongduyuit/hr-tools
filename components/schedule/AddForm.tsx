@@ -16,19 +16,17 @@ import {
   RadioGroup,
   Textarea,
   useToast,
-  VStack,
+  VStack
 } from "@chakra-ui/react";
+import axios from "axios";
 import { Select } from "chakra-react-select";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch } from "react-redux";
-import { setLoading, setOpenModal } from "../../redux/appSlide";
-import axios from "axios";
+import { setLoading } from "../../redux/appSlide";
 
-import "react-datepicker/dist/react-datepicker.css";
-
-export default function AddForm({ isOpen, candidate, addresses, onClose }: any) {
+export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
   const toast = useToast();
   const dispatch = useDispatch();
 
@@ -39,7 +37,6 @@ export default function AddForm({ isOpen, candidate, addresses, onClose }: any) 
   const [interviewAddress, setInterviewAddress] = useState<string>();
   const [interviewDate, setInterviewDate] = useState(new Date());
   const [note, setNote] = useState<string>("");
-
 
   const handleChangeWork = (newValue: any, _: any) => {
     setWorkAddress(newValue.id);
@@ -71,6 +68,9 @@ export default function AddForm({ isOpen, candidate, addresses, onClose }: any) 
           isClosable: true,
           position: "bottom-right",
         });
+
+        onClose(true)
+
       } else {
         toast({
           title: "Thêm lịch phỏng vấn thất bại",

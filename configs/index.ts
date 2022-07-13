@@ -91,14 +91,9 @@ export const CandidateConfig: { [key: string]: ICandidateConfig } = {
     key: "linkCV",
     column: "T",
   },
-  U: {
-    label: "Store",
-    key: "store",
-    column: "U",
-  },
-  V: {
-    label: "PIC",
-    key: "pic",
-    column: "V",
-  }
 };
+
+export enum StoreType {
+  Outlet = "Outlet",
+  Kios = "Kios",
+}

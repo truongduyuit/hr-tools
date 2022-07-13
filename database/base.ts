@@ -40,16 +40,16 @@ export class MongooseBaseService<IMongooseModel extends Document> {
     this._mongooseModel = mongooseModel;
   }
 
-  async getAll(): Promise<IMongooseModel[]> {
-    return (await this._mongooseModel.find({})) as IMongooseModel[];
+  async getAll(populate?: PopulateOptions | (string | PopulateOptions)[]): Promise<IMongooseModel[]> {
+    return (await this._mongooseModel.find({}).populate(populate).lean()) as IMongooseModel[];
   }
 
-  async getById(id: any): Promise<IMongooseModel> {
-    return (await this._mongooseModel.findById(id)) as IMongooseModel;
+  async getById(id: any, select?: string): Promise<IMongooseModel> {
+    return (await this._mongooseModel.findById(id).select(select).lean()) as IMongooseModel;
   }
 
   async getOne(query: any): Promise<IMongooseModel> {
-    return (await this._mongooseModel.findOne(query)) as IMongooseModel;
+    return (await this._mongooseModel.findOne(query).lean()) as IMongooseModel;
   }
 
   async getByQuery({

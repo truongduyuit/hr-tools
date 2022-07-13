@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 export interface ICandidateModel extends mongoose.Document {
   _id: mongoose.Types.ObjectId;
   name: string;
+  nameNoAccent: string;
   phone: string;
   email: string;
   workType: string;
@@ -20,17 +21,19 @@ export interface ICandidateModel extends mongoose.Document {
   ssWorkTime: string;
   brand: string;
   linkCV: string;
-  store: string;
-  pic: string;
-  haveSchedule: boolean
-  scheduleId: string,
-  position: string;
-  selectBrand: string;
+  haveSchedule: boolean;
+  haveCv: boolean;
+  scheduleId: string;
+  scheduleInfo: any;
 }
 
 const schema = new mongoose.Schema(
   {
     name: {
+      type: String,
+      index: true,
+    },
+    nameNoAccent: {
       type: String,
       index: true,
     },
@@ -69,7 +72,7 @@ const schema = new mongoose.Schema(
     },
     timeApply: {
       type: String,
-      index: true
+      index: true,
     },
     exp: {
       type: String,
@@ -90,23 +93,15 @@ const schema = new mongoose.Schema(
     linkCV: {
       type: String,
     },
-    store: {
-      type: String,
-    },
-    pic: {
-      type: String
-    },
     haveSchedule: {
       type: Boolean,
-      default: false
+      default: false,
+    },
+    haveCv: {
+      type: Boolean,
+      default: false,
     },
     scheduleId: { type: mongoose.Types.ObjectId },
-    position: {
-      type: String
-    },
-    selectBrand: {
-      type: String
-    }
   },
   {
     collection: "candidate",

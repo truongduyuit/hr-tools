@@ -13,10 +13,11 @@ export default async function handler(
 ) {
   const session = await mongoose.startSession();
   let result;
-  try {
-    await session.startTransaction();
 
+  try {
     if (req.method === "POST") {
+      await session.startTransaction();
+
       const {
         candidateId,
         workAddress,
@@ -44,10 +45,11 @@ export default async function handler(
       );
 
       result = schedule;
+      await session.commitTransaction();
+      session.endSession();
+    } else if (req.method === "GET") {
     }
 
-    await session.commitTransaction();
-    session.endSession();
     return res.status(200).json({ value: result, isSuccess: true });
   } catch (error) {
     await session.abortTransaction();

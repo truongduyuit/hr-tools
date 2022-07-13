@@ -7,6 +7,7 @@ import Candidate from "../components/candidateData";
 import Sidebar from "../components/sidebar";
 import { CandidateConfig } from "../configs";
 import { setLoading } from "../redux/appSlide";
+import { toNormalForm } from "../utils";
 
 export default function Load() {
     const toast = useToast()
@@ -49,6 +50,8 @@ export default function Load() {
                         candidate = { ...candidate, [field]: key === "A" ? JSON.stringify(i?.[key]).replaceAll('"', '') : i?.[key] }
                     }
                 })
+
+                candidate = { ...candidate, nameNoAccent: toNormalForm(String(JSON.parse(JSON.stringify(candidate)).name)).toLowerCase() }
                 return candidate
             })
 

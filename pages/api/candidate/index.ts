@@ -83,7 +83,17 @@ export default async function handler(
       },
       populate: {
         path: "scheduleInfo",
-        select: "workAddress interviewAddress date note",
+        select: "date note position selectBrand workBranchId interviewBranchId",
+        populate: [
+          {
+            path: "workBranchInfo",
+            select: "symbol province district detail",
+          },
+          {
+            path: "interviewBranchInfo",
+            select: "symbol province district detail",
+          },
+        ],
       },
     });
     return res.status(200).json({ value: result, isSuccess: true });

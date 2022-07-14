@@ -1,11 +1,22 @@
-const branches = require("./configs/branch.json");
-const fs = require("fs")
+1.
+["1", "2", "3"].map(parseInt)
+// A. ["1", "2", "3"]
+// B. [1, 2, 3]
+// C. [0, 1, 2]
+// D. other
 
-const addressGBProvinceDistrict = branches.map((item) => {return {
-    ...item,
-    province: "",
-    district: "",
-    detail: ""
-} });
+2. 
+var name = 'World!';
+(function () {
+    if (typeof name === 'undefined') {
+      var name = 'Jack';
+      console.log('Goodbye ' + name);
+    } else {
+      console.log('Hello ' + name);
+    }
+})();
 
-fs.writeFileSync("branches.json", JSON.stringify(addressGBProvinceDistrict))
+// A. Goodbye Jack
+// B. Hello Jack
+// C. Hello undefined
+// D. Hello World

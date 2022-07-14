@@ -1,8 +1,11 @@
 import {
   Box,
-  Button, Flex,
-  FormControl, HStack,
-  Input, Select,
+  Button,
+  Flex,
+  FormControl,
+  HStack,
+  Input,
+  Select,
   SimpleGrid,
   Table,
   TableContainer,
@@ -11,7 +14,7 @@ import {
   Th,
   Thead,
   Tr,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -23,38 +26,39 @@ import AddForm from "../components/schedule/AddForm";
 import Sidebar from "../components/sidebar";
 import { ICandidateModel } from "../database";
 import { setLoading, setOpenModal } from "../redux/appSlide";
+import { Tooltip } from "@chakra-ui/react";
 
 export default function Candidate() {
   const dispatch = useDispatch();
 
-  const [branches, setBranches] = useState([])
+  const [branches, setBranches] = useState([]);
   const [candidates, setCandidates] = useState<ICandidateModel[]>([]);
   const [metadata, setMetadata] = useState<any>({});
   const [candidateEdit, setCandidateEdit] = useState<
     ICandidateModel | undefined
   >();
 
-  const [page, setPage] = useState<number>(0)
-  const [limit, setLimit] = useState<number>(10)
-  const [search, setSearch] = useState<string>("")
+  const [page, setPage] = useState<number>(0);
+  const [limit, setLimit] = useState<number>(10);
+  const [search, setSearch] = useState<string>("");
   const [fromDate, setFromDate] = useState();
   const [toDate, setToDate] = useState();
-  const [position, setPosition] = useState<string>("undefined")
-  const [haveSchedule, setHaveSchedule] = useState<string>("undefined")
-  const [haveCv, setHaveCv] = useState<string>("undefined")
+  const [position, setPosition] = useState<string>("undefined");
+  const [haveSchedule, setHaveSchedule] = useState<string>("undefined");
+  const [haveCv, setHaveCv] = useState<string>("undefined");
 
   useEffect(() => {
     loadCandidate(page, limit);
-    loadBranches()
+    loadBranches();
   }, []);
 
   const loadBranches = async () => {
-    const result = await axios.get(`/api/branches`)
+    const result = await axios.get(`/api/branches`);
 
     if (result && result.data) {
-      setBranches(result.data.value)
+      setBranches(result.data.value.records);
     }
-  }
+  };
 
   const loadCandidate = async (page?: number, limit?: number) => {
     dispatch(setLoading(true));
@@ -67,7 +71,7 @@ export default function Candidate() {
         setCandidates(result.data.value.records);
         setMetadata(result.data.value.metadata);
       }
-    } catch (error) { }
+    } catch (error) {}
 
     dispatch(setLoading(false));
   };
@@ -97,11 +101,11 @@ export default function Candidate() {
     }
 
     dispatch(setOpenModal(false));
-    setCandidateEdit(undefined)
-  }
+    setCandidateEdit(undefined);
+  };
 
   const handleExportData = async () => {
-    const rows = candidates.map(c => {
+    const rows = candidates.map((c) => {
       const { name, phone, dob, position, selectBrand, scheduleInfo } = c;
 
       return {
@@ -114,9 +118,9 @@ export default function Candidate() {
         interviewAddress: scheduleInfo?.interviewAddress,
         hour: scheduleInfo?.date.slice(11, 16),
         date: scheduleInfo?.date.slice(0, 10),
-        note: scheduleInfo?.note
-      }
-    })
+        note: scheduleInfo?.note,
+      };
+    });
 
     const worksheet = XLSX.utils.json_to_sheet(rows);
     const workbook = XLSX.utils.book_new();
@@ -124,14 +128,31 @@ export default function Candidate() {
 
     /* fix headers */
     XLSX.utils.sheet_add_aoa(worksheet, [[`Ngày `]], { origin: "A1" });
-    XLSX.utils.sheet_add_aoa(worksheet, [["Họ tên", "SĐT", "DOB", "Vị trí", "Thương hiệu", "Chi nhánh làm việc", "Phỏng vấn", "Giờ", "Ngày", "Ghi chú"]], { origin: "A1" });
+    XLSX.utils.sheet_add_aoa(
+      worksheet,
+      [
+        [
+          "Họ tên",
+          "SĐT",
+          "DOB",
+          "Vị trí",
+          "Thương hiệu",
+          "Chi nhánh làm việc",
+          "Phỏng vấn",
+          "Giờ",
+          "Ngày",
+          "Ghi chú",
+        ],
+      ],
+      { origin: "A1" }
+    );
 
     /* calculate column width */
     const max_width = rows.reduce((w, r) => Math.max(w, r.name.length), 10);
     worksheet["!cols"] = [{ wch: max_width }];
 
     XLSX.writeFile(workbook, "Presidents.xlsx");
-  }
+  };
 
   const handleSearch = async () => {
     dispatch(setLoading(true));
@@ -140,27 +161,27 @@ export default function Candidate() {
       let url = `/api/candidate?page=${page}&limit=${limit}`;
 
       if (search !== "") {
-        url += `&search=${search}`
+        url += `&search=${search}`;
       }
 
       if (position !== "undefined") {
-        url += `&position=${position}`
+        url += `&position=${position}`;
       }
 
       if (haveCv !== "undefined") {
-        url += `&haveCv=${haveCv}`
+        url += `&haveCv=${haveCv}`;
       }
 
       if (haveSchedule !== "undefined") {
-        url += `&haveSchedule=${haveSchedule}`
+        url += `&haveSchedule=${haveSchedule}`;
       }
 
       if (fromDate) {
-        url += `&fromDate=${fromDate}`
+        url += `&fromDate=${fromDate}`;
       }
 
       if (fromDate) {
-        url += `&toDate${toDate}`
+        url += `&toDate${toDate}`;
       }
 
       const result = await axios.get(url);
@@ -169,26 +190,34 @@ export default function Candidate() {
         setMetadata(result.data.value.metadata);
       }
     } catch (error) {
-      console.log("error: ", error)
+      console.log("error: ", error);
     }
 
     dispatch(setLoading(false));
-  }
+  };
 
   return (
     <Flex>
       <Sidebar />
-      <Flex ml="50px" flexDir="column" marginTop="2vh" >
+      <Flex ml="50px" flexDir="column" marginTop="2vh">
         {/* filter */}
         <Flex align="center" border="2px solid teal" borderRadius={15} p={5}>
           <SimpleGrid minW="1000px" columns={4} spacing={5}>
             <VStack spacing={5}>
               <FormControl>
-                <Input id='search' placeholder="Tìm kiếm theo tên, sdt, email" value={search} onChange={e => setSearch(e.target.value)} />
+                <Input
+                  id="search"
+                  placeholder="Tìm kiếm theo tên, sdt, email"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
               </FormControl>
 
               <FormControl>
-                <Select value={position} onChange={e => setPosition(e.target.value)}>
+                <Select
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                >
                   <option value="undefined">Tất cả vị trí</option>
                   <option value="Part time">Part time</option>
                   <option value="Full time">Full time</option>
@@ -199,7 +228,10 @@ export default function Candidate() {
 
             <VStack spacing={5}>
               <FormControl>
-                <Select value={String(haveSchedule)} onChange={e => setHaveSchedule(e.target.value)}>
+                <Select
+                  value={String(haveSchedule)}
+                  onChange={(e) => setHaveSchedule(e.target.value)}
+                >
                   <option value="undefined">Lịch phỏng vấn</option>
                   <option value="false">Chưa có</option>
                   <option value="true">Đã có</option>
@@ -207,7 +239,10 @@ export default function Candidate() {
               </FormControl>
 
               <FormControl>
-                <Select value={String(haveCv)} onChange={e => setHaveCv(e.target.value)}>
+                <Select
+                  value={String(haveCv)}
+                  onChange={(e) => setHaveCv(e.target.value)}
+                >
                   <option value="undefined">CV</option>
                   <option value="false">Chưa nộp</option>
                   <option value="true">Đã nộp</option>
@@ -241,21 +276,31 @@ export default function Candidate() {
             </VStack>
 
             <VStack spacing={5}>
-              <Button colorScheme="teal" onClick={handleSearch} w="120px">Tìm kiếm</Button>
-              <Button colorScheme="facebook" onClick={handleExportData} w="120px">Export Data</Button>
+              <Button colorScheme="teal" onClick={handleSearch} w="120px">
+                Tìm kiếm
+              </Button>
+              <Button
+                colorScheme="facebook"
+                onClick={handleExportData}
+                w="120px"
+              >
+                Export Data
+              </Button>
             </VStack>
           </SimpleGrid>
-
         </Flex>
 
         <TableContainer mt={5} minW="1600px" minH="750px">
           <Table w="full" overflowX="auto">
             <Thead>
               <Tr bgColor="teal">
-                <Th color="#fff">Họ và Tên ({metadata?.totalRecord || 0} ƯV)</Th>
+                <Th color="#fff">
+                  Họ và Tên ({metadata?.totalRecord || 0} ƯV)
+                </Th>
                 <Th color="#fff">SĐT</Th>
                 <Th color="#fff">Vị trí</Th>
                 <Th color="#fff">Thương hiệu</Th>
+                <Th color="#fff">CN làm việc</Th>
                 <Th color="#fff">CN phỏng vấn</Th>
                 <Th color="#fff">Ngày giờ phỏng vấn</Th>
                 <Th color="#fff">Ghi chú</Th>
@@ -263,7 +308,11 @@ export default function Candidate() {
             </Thead>
             <Tbody>
               {candidates?.map((c) => {
-                const { name, phone, position, selectBrand, scheduleInfo } = c;
+                const { name, phone, scheduleInfo = {} } = c;
+                const position = scheduleInfo?.position;
+                const selectBrand = scheduleInfo?.selectBrand;
+                const workBranchInfo = scheduleInfo?.workBranchInfo;
+                const interviewBranchInfo = scheduleInfo?.interviewBranchInfo;
 
                 return (
                   <Tr key={c._id.toString()}>
@@ -271,8 +320,32 @@ export default function Candidate() {
                     <Td>{phone}</Td>
                     <Td>{position}</Td>
                     <Td>{selectBrand}</Td>
-                    <Td>{scheduleInfo?.interviewAddress}</Td>
-                    <Td>{scheduleInfo?.date.slice(0, 10)} - {scheduleInfo?.date.slice(11, 16)}</Td>
+                    <Td>
+                      {workBranchInfo && (
+                        <Tooltip
+                          hasArrow
+                          label={`${scheduleInfo?.workBranchInfo.detail} - ${scheduleInfo?.workBranchInfo.district} - ${scheduleInfo?.workBranchInfo.province}`}
+                          bg="red.600"
+                        >
+                          <Button>{scheduleInfo?.workBranchInfo.symbol}</Button>
+                        </Tooltip>
+                      )}
+                    </Td>
+                    <Td>
+                      {interviewBranchInfo && (
+                        <Tooltip
+                          hasArrow
+                          label={`${scheduleInfo?.interviewBranchInfo.detail} - ${scheduleInfo?.interviewBranchInfo.district} - ${scheduleInfo?.interviewBranchInfo.province}`}
+                          bg="red.600"
+                        >
+                          <Button>{scheduleInfo?.interviewBranchInfo.symbol}</Button>
+                        </Tooltip>
+                      )}
+                    </Td>
+                    <Td>
+                      {scheduleInfo?.date.slice(0, 10)} -{" "}
+                      {scheduleInfo?.date.slice(11, 16)}
+                    </Td>
                     <Td>
                       {c.haveSchedule ? (
                         <>{scheduleInfo?.note}</>

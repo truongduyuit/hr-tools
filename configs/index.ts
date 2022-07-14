@@ -97,3 +97,8 @@ export enum StoreType {
   Outlet = "Outlet",
   Kios = "Kios",
 }
+
+
+export const Positions = ["Part time", "Full time", "Captain", "Store Supervisor", "Store Manager", "Acting AM", "AM"]
+
+export const Brands = ["Chuk", "Bánh mì ơi"]

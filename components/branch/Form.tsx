@@ -28,7 +28,7 @@ import { setLoading } from "../../redux/appSlide";
 const BranchForm: React.FC = ({ info = {}, isOpen, onClose, types }: any) => {
   const toast = useToast();
   const dispatch = useDispatch();
-  
+
   const [pickerType, setPickerType] = useState<any[]>([]);
   const [selectedType, setSelectedType] = useState<any[]>([]);
   const [symbol, setSymbol] = useState<string>("");
@@ -52,16 +52,18 @@ const BranchForm: React.FC = ({ info = {}, isOpen, onClose, types }: any) => {
 
       return item;
     });
-
-    setPickerType(ts);
-    setSymbol(info.symbol);
-    setProvince(info.province);
-    setDistrict(info.district);
-    setDetail(info.detail);
-    setHotline(info.hotline);
-    setEmail(info.email);
-    setLead(info.lead);
-    setStatus(info.status ? true : false);
+    
+    if (info) {
+      setPickerType(ts);
+      setSymbol(info.symbol);
+      setProvince(info.province);
+      setDistrict(info.district);
+      setDetail(info.detail);
+      setHotline(info.hotline);
+      setEmail(info.email);
+      setLead(info.lead);
+      setStatus(info.status ? true : false);
+    }
   }, [info]);
 
   const handleCreateItem = (item: any) => {
@@ -86,7 +88,7 @@ const BranchForm: React.FC = ({ info = {}, isOpen, onClose, types }: any) => {
       isClosable: true,
       position: "bottom-right",
     });
-  }
+  };
 
   const handleCreateOrUpdate = async () => {
     dispatch(setLoading(true));
@@ -114,9 +116,9 @@ const BranchForm: React.FC = ({ info = {}, isOpen, onClose, types }: any) => {
         });
 
         onClose(true);
-      } else showErrorToast()
+      } else showErrorToast();
     } catch (error) {
-      showErrorToast(`${JSON.stringify(error)}`)
+      showErrorToast(`${JSON.stringify(error)}`);
     }
 
     dispatch(setLoading(false));

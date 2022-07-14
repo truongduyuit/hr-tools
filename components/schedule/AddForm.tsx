@@ -14,16 +14,18 @@ import {
   ModalOverlay,
   Radio,
   RadioGroup,
+  SimpleGrid,
   Textarea,
   useToast,
-  VStack
+  VStack,
 } from "@chakra-ui/react";
 import axios from "axios";
 import { Select } from "chakra-react-select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch } from "react-redux";
+import { Brands, Positions } from "../../configs";
 import { setLoading } from "../../redux/appSlide";
 
 export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
@@ -31,12 +33,44 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
   const dispatch = useDispatch();
 
   const { name, workType, workArea, brand } = candidate;
-  const [position, setPosition] = useState<string>()
-  const [selectBrand, setSelectBrand] = useState<string>()
+  const [position, setPosition] = useState<string>();
+  const [selectBrand, setSelectBrand] = useState<string>();
   const [workAddress, setWorkAddress] = useState<string>();
   const [interviewAddress, setInterviewAddress] = useState<string>();
   const [interviewDate, setInterviewDate] = useState(new Date());
   const [note, setNote] = useState<string>("");
+  const [addresses, setAddresses] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (branches) {
+      let adds = {} as any;
+      branches.map((b: any) => {
+        const { _id, symbol, province, district, detail } = b;
+
+        if (province && district) {
+          const key = `=============== ${province} - ${district} ===============`;
+          const option = {
+            label: `${symbol} - ${detail}`,
+            id: _id,
+          };
+
+          if (adds[key]) {
+            adds[key].push(option);
+          } else {
+            adds[key] = [option];
+          }
+        }
+      });
+
+      const addressMap = Object.keys(adds).map((key) => {
+        return {
+          label: key,
+          options: adds[key],
+        };
+      });
+      setAddresses(addressMap);
+    }
+  }, [branches]);
 
   const handleChangeWork = (newValue: any, _: any) => {
     setWorkAddress(newValue.id);
@@ -52,12 +86,12 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
     try {
       const result = await axios.post("/api/schedule", {
         candidateId: candidate._id,
-        workAddress: workAddress,
-        interviewAddress: interviewAddress,
+        workBranchId: workAddress,
+        interviewBranchId: interviewAddress,
         date: interviewDate,
         note,
         position,
-        selectBrand
+        selectBrand,
       });
 
       if (result && result.data.isSuccess) {
@@ -69,8 +103,7 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
           position: "bottom-right",
         });
 
-        onClose(true)
-
+        onClose(true);
       } else {
         toast({
           title: "Thêm lịch phỏng vấn thất bại",
@@ -113,23 +146,32 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
 
               <FormControl as="fieldset">
                 <FormLabel as="legend">Chọn vị trí</FormLabel>
-                <RadioGroup onChange={value => setPosition(value)}>
-                  <HStack spacing="24px">
-                    <Radio value="Part time">Part time</Radio>
-                    <Radio value="Full time">Full time</Radio>
-                    <Radio value="Captain">Captain</Radio>
-                  </HStack>
+                <RadioGroup onChange={(value) => setPosition(value)}>
+                  <SimpleGrid  columns={3} spacing={3}>
+                    {Positions.map((p) => {
+                      return (
+                        <Radio key={p} value={p}>
+                          {p}
+                        </Radio>
+                      );
+                    })}
+                  </SimpleGrid>
                 </RadioGroup>
                 <FormHelperText>Vị trí mong muốn: {workType}</FormHelperText>
               </FormControl>
 
               <FormControl as="fieldset">
                 <FormLabel as="legend">Chọn thương hiệu</FormLabel>
-                <RadioGroup onChange={value => setSelectBrand(value)}>
-                  <HStack spacing="24px">
-                    <Radio value="Chuk">Chuk</Radio>
-                    <Radio value="Bánh mì ơi">Bánh mì ơi</Radio>
-                  </HStack>
+                <RadioGroup onChange={(value) => setSelectBrand(value)}>
+                <SimpleGrid  columns={3} spacing={3}>
+                    {Brands.map((p) => {
+                      return (
+                        <Radio key={p} value={p}>
+                          {p}
+                        </Radio>
+                      );
+                    })}
+                  </SimpleGrid>
                 </RadioGroup>
                 <FormHelperText>Thương hiệu mong muốn: {brand}</FormHelperText>
               </FormControl>
@@ -139,7 +181,9 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
                 <Select
                   tagVariant="solid"
                   options={addresses}
-                  onChange={(newValue, metadata) => handleChangeWork(newValue, metadata)}
+                  onChange={(newValue, metadata) =>
+                    handleChangeWork(newValue, metadata)
+                  }
                 />
                 <FormHelperText>Khu vực mong muốn: {workArea}</FormHelperText>
               </FormControl>
@@ -171,7 +215,7 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
 
                 <Textarea
                   value={note}
-                  onChange={e => setNote(e.target.value)}
+                  onChange={(e) => setNote(e.target.value)}
                   placeholder="Nhập ghi chú"
                   size="sm"
                 />

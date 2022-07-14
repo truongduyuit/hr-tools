@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 export interface IScheduleModel extends mongoose.Document {
   _id: mongoose.Types.ObjectId;
-  candidateId: string;
-  workBranchId: string;
-  interviewBranchId: string;
+  candidateId: mongoose.Types.ObjectId;
+  workBranchId: mongoose.Types.ObjectId;
+  interviewBranchId: mongoose.Types.ObjectId;
   date: Date;
   note: string;
   isPass: string;
@@ -23,8 +23,12 @@ const schema = new mongoose.Schema(
     selectBrand: {
       type: String,
     },
-    workBranchId: { type: mongoose.Types.ObjectId },
-    interviewBranchId: { type: mongoose.Types.ObjectId },
+    workBranchId: { 
+      type: mongoose.Types.ObjectId 
+    },
+    interviewBranchId: { 
+      type: mongoose.Types.ObjectId 
+    },
     date: {
       type: Date,
     },

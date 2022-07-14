@@ -20,8 +20,8 @@ export default async function handler(
 
       const {
         candidateId,
-        workAddress,
-        interviewAddress,
+        workBranchId,
+        interviewBranchId,
         date,
         note,
         position,
@@ -29,7 +29,7 @@ export default async function handler(
       } = req.body;
 
       const schedule = await ScheduleFunctions.create(
-        { candidateId, workAddress, interviewAddress, date, note },
+        { candidateId, workBranchId, interviewBranchId, date, note, position, selectBrand },
         { session }
       );
 
@@ -38,8 +38,6 @@ export default async function handler(
         {
           haveSchedule: true,
           scheduleId: schedule._id,
-          position,
-          selectBrand,
         },
         { session }
       );

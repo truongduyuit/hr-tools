@@ -3,6 +3,7 @@ import {
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { FiCalendar, FiUserPlus, FiHome, FiMenu } from 'react-icons/fi'
+import { AiOutlineShareAlt } from "react-icons/ai";
 import { useDispatch, useSelector } from 'react-redux'
 import { setNavSize } from '../../redux/appSlide'
 import { RootState } from '../../redux/store'
@@ -48,6 +49,7 @@ export default function Sidebar() {
                     }}
                 />
                 <NavItem href="/dashboard" navSize={navSize} icon={FiHome} title="Bảng điều khiển"  active={router.pathname === "/dashboard"}/>
+                <NavItem href="/branch" navSize={navSize} icon={AiOutlineShareAlt} title="Chi nhánh" active={router.pathname === "/branch"} />
                 <NavItem href="/load" navSize={navSize} icon={FiUserPlus} title="Thêm ứng viên" active={router.pathname === "/load"} />
                 <NavItem href="/candidate" navSize={navSize} icon={FiCalendar} title="QL ứng viên" active={router.pathname === "/candidate"} />
             </Flex>

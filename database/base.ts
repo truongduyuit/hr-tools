@@ -41,7 +41,11 @@ export class MongooseBaseService<IMongooseModel extends Document> {
   }
 
   async getAll(populate?: PopulateOptions | (string | PopulateOptions)[]): Promise<IMongooseModel[]> {
-    return (await this._mongooseModel.find({}).populate(populate).lean()) as IMongooseModel[];
+    return (await this._mongooseModel.find({}).populate(populate ?? [""]).lean()) as IMongooseModel[];
+  }
+
+  async getAllAndSelect(select: string): Promise<IMongooseModel[]> {
+    return (await this._mongooseModel.find({}).select(select).lean()) as IMongooseModel[];
   }
 
   async getById(id: any, select?: string): Promise<IMongooseModel> {

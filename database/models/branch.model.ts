@@ -3,7 +3,9 @@ import mongoose from "mongoose";
 export interface IBranchModel extends mongoose.Document {
   _id: mongoose.Types.ObjectId;
   symbol: string;
-  addressId: mongoose.Types.ObjectId;
+  province: string;
+  district: string;
+  detail: string;
   type: string;
   hotline: string;
   email: string;
@@ -17,9 +19,16 @@ const schema = new mongoose.Schema(
       type: String,
       index: true,
     },
-    addressId: {
-      type: mongoose.Types.ObjectId,
+    province: {
+      type: String,
       index: true,
+    },
+    district: {
+      type: String,
+      index: true,
+    },
+    detail: {
+      type: String,
     },
     type: {
       type: String,
@@ -46,13 +55,6 @@ const schema = new mongoose.Schema(
     timestamps: true,
   }
 );
-
-schema.virtual("addressInfo", {
-  ref: "address",
-  localField: "addressId",
-  foreignField: "_id",
-  justOne: true,
-});
 
 schema.set("toObject", { virtuals: true });
 schema.set("toJSON", { virtuals: true });

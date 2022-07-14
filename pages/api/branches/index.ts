@@ -12,16 +12,69 @@ export default async function handler(
   res: NextApiResponse<Data>
 ) {
   try {
-    const branches = await BranchFunctions.getAll({
-      path: "addressInfo",
-      select: "province district detail",
-      populate: {
-        path: "",
-        select: ""
+    let result;
+    if (req.method === "GET") {
+      const { page, limit, search } = req.query;
+      let query = {} as any;
+      if (search) {
+        query = {
+          ...query,
+          $or: [
+            { symbol: { $regex: search, $options: "i" } },
+            { hotline: { $regex: search, $options: "i" } },
+            { email: { $regex: search, $options: "i" } },
+            { province: { $regex: search, $options: "i" } },
+            { district: { $regex: search, $options: "i" } },
+          ],
+        };
       }
-    });
-    return res.status(200).json({ value: branches, isSuccess: true });
+
+      result = await BranchFunctions.getByQuery({
+        query,
+        page: +String(page),
+        limit: +String(limit),
+      });
+    } else if (req.method === "POST") {
+      const {
+        _id,
+        symbol,
+        type,
+        province,
+        district,
+        detail,
+        hotline,
+        lead,
+        status,
+      } = req.body;
+
+      if (_id) {
+        result = await BranchFunctions.updateById(_id, {
+          symbol,
+          type,
+          province,
+          district,
+          detail,
+          hotline,
+          lead,
+          status,
+        });
+      } else {
+        result = await BranchFunctions.create({
+          symbol,
+          type,
+          province,
+          district,
+          detail,
+          hotline,
+          lead,
+          status,
+        });
+      }
+    }
+
+    return res.status(200).json({ value: result, isSuccess: true });
   } catch (error) {
+    console.log("Error: ", error);
     return res.status(200).json({ value: [], isSuccess: false });
   }
 }

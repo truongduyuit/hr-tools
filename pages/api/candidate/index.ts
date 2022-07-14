@@ -74,7 +74,6 @@ export default async function handler(
       };
     }
 
-    console.log("query: ", query);
     const result = await CandidateFunctions.populate({
       query,
       page: parseInt(page),

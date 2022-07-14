@@ -147,7 +147,7 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
               <FormControl as="fieldset">
                 <FormLabel as="legend">Chọn vị trí</FormLabel>
                 <RadioGroup onChange={(value) => setPosition(value)}>
-                  <SimpleGrid  columns={3} spacing={3}>
+                  <SimpleGrid columns={3} spacing={3}>
                     {Positions.map((p) => {
                       return (
                         <Radio key={p} value={p}>
@@ -163,7 +163,7 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
               <FormControl as="fieldset">
                 <FormLabel as="legend">Chọn thương hiệu</FormLabel>
                 <RadioGroup onChange={(value) => setSelectBrand(value)}>
-                <SimpleGrid  columns={3} spacing={3}>
+                  <SimpleGrid columns={3} spacing={3}>
                     {Brands.map((p) => {
                       return (
                         <Radio key={p} value={p}>

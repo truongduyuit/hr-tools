@@ -25,7 +25,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch } from "react-redux";
 import { setLoading } from "../../redux/appSlide";
 
-const BranchForm: React.FC = ({ info = {}, isOpen, onClose, types }: any) => {
+const BranchForm: React.FC<any> = ({ info = {}, isOpen, onClose, types }: any) => {
   const toast = useToast();
   const dispatch = useDispatch();
 
@@ -52,7 +52,7 @@ const BranchForm: React.FC = ({ info = {}, isOpen, onClose, types }: any) => {
 
       return item;
     });
-    
+
     if (info) {
       setPickerType(ts);
       setSymbol(info.symbol);

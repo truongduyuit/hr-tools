@@ -102,7 +102,7 @@ const Load = () => {
     } catch (error) {
       toast({
         title: "Thêm dữ liệu ứng viên thất bại",
-        description: error,
+        description: `Error: ${error}`,
         status: "error",
         duration: 5000,
         isClosable: true,

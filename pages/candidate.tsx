@@ -41,8 +41,8 @@ export default function Candidate() {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
-  const [fromDate, setFromDate] = useState();
-  const [toDate, setToDate] = useState();
+  const [fromDate, setFromDate] = useState<Date | null>();
+  const [toDate, setToDate] = useState<Date | null>();
   const [position, setPosition] = useState<string>("undefined");
   const [haveSchedule, setHaveSchedule] = useState<string>("undefined");
   const [haveCv, setHaveCv] = useState<string>("undefined");
@@ -71,7 +71,7 @@ export default function Candidate() {
         setCandidates(result.data.value.records);
         setMetadata(result.data.value.metadata);
       }
-    } catch (error) {}
+    } catch (error) { }
 
     dispatch(setLoading(false));
   };
@@ -115,10 +115,10 @@ export default function Candidate() {
         dob: dob.slice(0, 10),
         position,
         selectBrand,
-        workAddress: workBranchInfo?.symbol ,
+        workAddress: workBranchInfo?.symbol,
         interviewAddress: interviewBranchInfo?.symbol,
-        hour: scheduleInfo?.date.slice(11, 16) ,
-        date: scheduleInfo?.date.slice(0, 10) ,
+        hour: scheduleInfo?.date.slice(11, 16),
+        date: scheduleInfo?.date.slice(0, 10),
         note,
       };
     });

@@ -76,8 +76,8 @@ export default async function handler(
 
     const result = await CandidateFunctions.populate({
       query,
-      page: parseInt(page),
-      limit: parseInt(limit),
+      page: parseInt(String(page)),
+      limit: parseInt(String(limit)),
       sort: {
         createdAt: -1,
       },

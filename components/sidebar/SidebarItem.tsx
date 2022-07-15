@@ -10,7 +10,7 @@ import {
 } from '@chakra-ui/react'
 import Link from 'next/link'
 
-export default function NavItem({ icon, title, active, navSize, href }: any) {
+export default function NavItem({ icon, title, active, navSize = "large", href }: any) {
     return (
         <Link href={href}
             passHref>
@@ -22,11 +22,11 @@ export default function NavItem({ icon, title, active, navSize, href }: any) {
             >
                 <Menu placement="right">
                     <Box
-                        backgroundColor={active ? "teal": "#ccc"}
+                        backgroundColor={active ? "teal" : "#ccc"}
                         p={3}
                         borderRadius={8}
                         _hover={{ textDecor: 'none', backgroundColor: "#AAA", cursor: "pointer" }}
-                        w={navSize == "large" && "100%"}
+                        w={navSize == "large" ? "100%" : ""}
 
                     >
                         <MenuButton w="100%">

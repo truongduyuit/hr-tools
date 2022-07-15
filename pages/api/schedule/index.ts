@@ -1,6 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import mongoose from "mongoose";
-import { CandidateFunctions, ScheduleFunctions } from "../../../database";
+import {
+  CandidateFunctions,
+  Schedule,
+  ScheduleFunctions,
+} from "../../../database";
 
 type Data = {
   value: any;
@@ -17,7 +21,6 @@ export default async function handler(
   try {
     if (req.method === "POST") {
       await session.startTransaction();
-
       const {
         candidateId,
         workBranchId,
@@ -29,7 +32,15 @@ export default async function handler(
       } = req.body;
 
       const schedule = await ScheduleFunctions.create(
-        { candidateId, workBranchId, interviewBranchId, date, note, position, selectBrand },
+        {
+          candidateId,
+          workBranchId,
+          interviewBranchId,
+          date,
+          note,
+          position,
+          selectBrand,
+        },
         { session }
       );
 
@@ -46,6 +57,37 @@ export default async function handler(
       await session.commitTransaction();
       session.endSession();
     } else if (req.method === "GET") {
+      const { fromDate, toDate } = req.query;
+      result = await ScheduleFunctions.populate({
+        page: 0, limit: 10,
+        query: {
+          $and: [
+            {
+              date: {
+                $gte: fromDate,
+              },
+            },
+            {
+              date: {
+                $lte: toDate,
+              },
+            },
+          ],
+        },
+        sort: {
+          date: 1,
+        },
+        populate: [
+          {
+            path: "candidateInfo",
+            select: "name phone",
+          },
+          {
+            path: "interviewBranchInfo",
+            select: "symbol hotline email detail",
+          },
+        ],
+      });
     }
 
     return res.status(200).json({ value: result, isSuccess: true });

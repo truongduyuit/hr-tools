@@ -106,7 +106,8 @@ export default function Candidate() {
 
   const handleExportData = async () => {
     const rows = candidates.map((c) => {
-      const { name, phone, dob, position, selectBrand, scheduleInfo } = c;
+      const { name, phone, dob, scheduleInfo } = c;
+      const { selectBrand, position, note, workBranchInfo, interviewBranchInfo } = scheduleInfo || {};
 
       return {
         name: name,
@@ -114,11 +115,11 @@ export default function Candidate() {
         dob: dob.slice(0, 10),
         position,
         selectBrand,
-        workAddress: scheduleInfo?.workAddress,
-        interviewAddress: scheduleInfo?.interviewAddress,
-        hour: scheduleInfo?.date.slice(11, 16),
-        date: scheduleInfo?.date.slice(0, 10),
-        note: scheduleInfo?.note,
+        workAddress: workBranchInfo?.symbol ,
+        interviewAddress: interviewBranchInfo?.symbol,
+        hour: scheduleInfo?.date.slice(11, 16) ,
+        date: scheduleInfo?.date.slice(0, 10) ,
+        note,
       };
     });
 
@@ -151,7 +152,7 @@ export default function Candidate() {
     const max_width = rows.reduce((w, r) => Math.max(w, r.name.length), 10);
     worksheet["!cols"] = [{ wch: max_width }];
 
-    XLSX.writeFile(workbook, "Presidents.xlsx");
+    XLSX.writeFile(workbook, "Ứng ziên.xlsx");
   };
 
   const handleSearch = async () => {
@@ -199,7 +200,7 @@ export default function Candidate() {
   return (
     <Flex>
       <Sidebar />
-      <Flex ml="50px" flexDir="column" marginTop="2vh">
+      <Flex ml="50px" flexDir="column" marginTop="2vh" maxW="1440px">
         {/* filter */}
         <Flex align="center" border="2px solid teal" borderRadius={15} p={5}>
           <SimpleGrid minW="1000px" columns={4} spacing={5}>
@@ -290,7 +291,7 @@ export default function Candidate() {
           </SimpleGrid>
         </Flex>
 
-        <TableContainer mt={5} minW="1600px" minH="750px">
+        <TableContainer mt={5} minH="750px">
           <Table w="full" overflowX="auto">
             <Thead>
               <Tr bgColor="teal">
@@ -338,7 +339,9 @@ export default function Candidate() {
                           label={`${scheduleInfo?.interviewBranchInfo.detail} - ${scheduleInfo?.interviewBranchInfo.district} - ${scheduleInfo?.interviewBranchInfo.province}`}
                           bg="red.600"
                         >
-                          <Button>{scheduleInfo?.interviewBranchInfo.symbol}</Button>
+                          <Button>
+                            {scheduleInfo?.interviewBranchInfo.symbol}
+                          </Button>
                         </Tooltip>
                       )}
                     </Td>

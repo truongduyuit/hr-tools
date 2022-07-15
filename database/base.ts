@@ -189,7 +189,6 @@ export class MongooseBaseService<IMongooseModel extends Document> {
         .exec(),
       this._mongooseModel.find(query).countDocuments(),
     ]);
-
     return {
       records: docs as IMongooseModel[],
       metadata: {

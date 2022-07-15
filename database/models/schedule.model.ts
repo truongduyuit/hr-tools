@@ -8,6 +8,7 @@ export interface IScheduleModel extends mongoose.Document {
   date: Date;
   note: string;
   isPass: string;
+  candidateInfo: any;
   workBranchInfo: any;
   interviewBranchInfo: any;
   position: string;

@@ -3,7 +3,7 @@ import { AccountRoles } from "../contants/enum";
 import { loadEnvConfig } from "@next/env";
 loadEnvConfig("./", process.env.NODE_ENV !== "production");
 
-import { Mongoose, AccountFuntions } from "../database";
+import { Mongoose, AccountFunctions } from "../database";
 import bcrypt from "bcryptjs";
 import "./model";
 
@@ -13,7 +13,7 @@ import "./model";
 
     await Mongoose.init();
 
-    const adminAccount = await AccountFuntions.getOne({
+    const adminAccount = await AccountFunctions.getOne({
       phone: process.env.DB_ADMIN_PHONE,
     });
 
@@ -23,7 +23,7 @@ import "./model";
         process.env.DB_ADMIN_PASSWORD ?? "",
         salt
       );
-      await AccountFuntions.create({
+      await AccountFunctions.create({
         name: "admin",
         phone: process.env.DB_ADMIN_PHONE,
         password,

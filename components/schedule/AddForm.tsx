@@ -88,9 +88,7 @@ export default function AddForm({ isOpen, candidate, branches, onClose }: any) {
         candidateId: candidate._id,
         workBranchId: workAddress,
         interviewBranchId: interviewAddress,
-        date: new Date(
-          interviewDate.setHours(interviewDate.getHours() + 7)
-        ).toISOString(),
+        date: interviewDate.toISOString(),
         note,
         position,
         selectBrand,

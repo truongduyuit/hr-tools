@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import * as XLSX from "xlsx";
 import Candidate from "../components/candidateData";
@@ -102,7 +102,7 @@ const Load = () => {
     } catch (error) {
       toast({
         title: "Thêm dữ liệu ứng viên thất bại",
-        description: error,
+        description: `Error: ${error}`,
         status: "error",
         duration: 5000,
         isClosable: true,
@@ -113,6 +113,11 @@ const Load = () => {
     dispatch(setLoading(false));
   };
 
+  useEffect(() => {
+    dispatch(setLoading(false))
+  }, [])
+  
+  
   return (
     <div>
       <Flex>

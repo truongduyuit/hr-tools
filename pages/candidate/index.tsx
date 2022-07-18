@@ -22,11 +22,14 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useDispatch } from "react-redux";
 import * as XLSX from "xlsx";
-import AddForm from "../components/schedule/AddForm";
-import Sidebar from "../components/sidebar";
-import { ICandidateModel } from "../database";
-import { setLoading, setOpenModal } from "../redux/appSlide";
+import AddForm from "../../components/schedule/AddForm";
+import Sidebar from "../../components/sidebar";
+import { ICandidateModel } from "../../database";
+import { setLoading, setOpenModal } from "../../redux/appSlide";
 import { Tooltip } from "@chakra-ui/react";
+import { getStartEndDate } from "../../utils";
+import { Positions } from "../../configs";
+import { CustomLink } from "../../components/customLink";
 
 export default function Candidate() {
   const dispatch = useDispatch();
@@ -41,11 +44,11 @@ export default function Candidate() {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(10);
   const [search, setSearch] = useState<string>("");
-  const [fromDate, setFromDate] = useState();
-  const [toDate, setToDate] = useState();
+  const [fromDate, setFromDate] = useState<Date>();
+  const [toDate, setToDate] = useState<Date>();
   const [position, setPosition] = useState<string>("undefined");
   const [haveSchedule, setHaveSchedule] = useState<string>("undefined");
-  const [haveCv, setHaveCv] = useState<string>("undefined");
+  const [status, setStatus] = useState<string>("undefined");
 
   useEffect(() => {
     loadCandidate(page, limit);
@@ -71,7 +74,7 @@ export default function Candidate() {
         setCandidates(result.data.value.records);
         setMetadata(result.data.value.metadata);
       }
-    } catch (error) {}
+    } catch (error) { }
 
     dispatch(setLoading(false));
   };
@@ -115,10 +118,10 @@ export default function Candidate() {
         dob: dob.slice(0, 10),
         position,
         selectBrand,
-        workAddress: workBranchInfo?.symbol ,
+        workAddress: workBranchInfo?.symbol,
         interviewAddress: interviewBranchInfo?.symbol,
-        hour: scheduleInfo?.date.slice(11, 16) ,
-        date: scheduleInfo?.date.slice(0, 10) ,
+        hour: scheduleInfo?.date.slice(11, 16),
+        date: scheduleInfo?.date.slice(0, 10),
         note,
       };
     });
@@ -169,20 +172,22 @@ export default function Candidate() {
         url += `&position=${position}`;
       }
 
-      if (haveCv !== "undefined") {
-        url += `&haveCv=${haveCv}`;
-      }
-
       if (haveSchedule !== "undefined") {
         url += `&haveSchedule=${haveSchedule}`;
       }
 
-      if (fromDate) {
-        url += `&fromDate=${fromDate}`;
+      if (status !== "undefined") {
+        url += `&status=${status}`;
       }
 
       if (fromDate) {
-        url += `&toDate${toDate}`;
+        const { startDate } = getStartEndDate(new Date(fromDate.setHours(fromDate.getHours() + 7)))
+        url += `&fromDate=${startDate.toISOString()}`;
+      }
+
+      if (toDate) {
+        const { endDate } = getStartEndDate(new Date(toDate.setHours(toDate.getHours() + 7)))
+        url += `&toDate=${endDate.toISOString()}`;
       }
 
       const result = await axios.get(url);
@@ -220,9 +225,11 @@ export default function Candidate() {
                   onChange={(e) => setPosition(e.target.value)}
                 >
                   <option value="undefined">Tất cả vị trí</option>
-                  <option value="Part time">Part time</option>
-                  <option value="Full time">Full time</option>
-                  <option value="Captain">Captain</option>
+                  {
+                    Positions.map(p => {
+                      return <option key={p} value={p}>{p}</option>
+                    })
+                  }
                 </Select>
               </FormControl>
             </VStack>
@@ -241,12 +248,13 @@ export default function Candidate() {
 
               <FormControl>
                 <Select
-                  value={String(haveCv)}
-                  onChange={(e) => setHaveCv(e.target.value)}
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
                 >
-                  <option value="undefined">CV</option>
-                  <option value="false">Chưa nộp</option>
-                  <option value="true">Đã nộp</option>
+                  <option value="undefined">Trạng thái</option>
+                  <option value="0">Đang ứng tuyển</option>
+                  <option value="1">Đang làm việc</option>
+                  <option value="-1">Đã nghỉ việc</option>
                 </Select>
               </FormControl>
             </VStack>
@@ -255,18 +263,19 @@ export default function Candidate() {
               <Box border="1px solid #ccc" p={1.5} borderRadius={5}>
                 <DatePicker
                   selected={fromDate}
-                  onChange={(date) => setFromDate(date)}
+                  onChange={(date: Date) => setFromDate(date)}
                   selectsStart
                   startDate={fromDate}
                   endDate={toDate}
                   placeholderText="Từ ngày"
+                  locale="area"
                 />
               </Box>
 
               <Box border="1px solid #ccc" p={1.5} borderRadius={5}>
                 <DatePicker
                   selected={toDate}
-                  onChange={(date) => setToDate(date)}
+                  onChange={(date: Date) => setToDate(date)}
                   selectsEnd
                   startDate={fromDate}
                   endDate={toDate}
@@ -317,7 +326,7 @@ export default function Candidate() {
 
                 return (
                   <Tr key={c._id.toString()}>
-                    <Td>{name}</Td>
+                    <Td><CustomLink href={`/candidate/${c.id}`} label={name} /></Td>
                     <Td>{phone}</Td>
                     <Td>{position}</Td>
                     <Td>{selectBrand}</Td>

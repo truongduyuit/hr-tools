@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const Accountschema = new mongoose.Schema(
+const AccountSchema = new mongoose.Schema(
   {
     phone: {
       type: String,
@@ -24,4 +24,4 @@ const Accountschema = new mongoose.Schema(
 );
 
 export const Account =
-  mongoose.models.accounts || mongoose.model("accounts", Accountschema);
+  mongoose.models.accounts || mongoose.model("accounts", AccountSchema);

@@ -23,7 +23,7 @@ export default async function handler(
       fromDate,
       toDate,
       position,
-      haveCv,
+      status,
       haveSchedule,
     } = req.query;
 
@@ -46,10 +46,10 @@ export default async function handler(
       };
     }
 
-    if (haveCv) {
+    if (status) {
       query = {
         ...query,
-        haveCv: haveCv === "true",
+        status,
       };
     }
 
@@ -60,24 +60,30 @@ export default async function handler(
       };
     }
 
-    if (fromDate) {
+    if (fromDate && toDate) {
       query = {
         ...query,
-        timeApply: { $gt: fromDate },
+        $and: [
+          { timeApply: { $gt: fromDate } },
+          { timeApply: { $lte: toDate } }
+        ]
       };
-    }
-
-    if (toDate) {
+    } else if (fromDate) {
       query = {
         ...query,
-        timeApply: { $lte: toDate },
+        timeApply: { $gt: fromDate }
+      };
+    } else if (toDate) {
+      query = {
+        ...query,
+        timeApply: { $lte: toDate }
       };
     }
 
     const result = await CandidateFunctions.populate({
       query,
-      page: parseInt(page),
-      limit: parseInt(limit),
+      page: parseInt(String(page)),
+      limit: parseInt(String(limit)),
       sort: {
         createdAt: -1,
       },
@@ -98,5 +104,6 @@ export default async function handler(
     });
     return res.status(200).json({ value: result, isSuccess: true });
   }
+
   return res.status(200).json({ value: "John Doe", isSuccess: true });
 }

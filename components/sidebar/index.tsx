@@ -1,13 +1,13 @@
 import {
     Flex, IconButton
-} from '@chakra-ui/react'
-import { useRouter } from 'next/router'
-import { FiCalendar, FiUserPlus, FiHome, FiMenu } from 'react-icons/fi'
+} from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { AiOutlineShareAlt } from "react-icons/ai";
-import { useDispatch, useSelector } from 'react-redux'
-import { setNavSize } from '../../redux/appSlide'
-import { RootState } from '../../redux/store'
-import NavItem from './SidebarItem'
+import { FiUsers, FiHome, FiMenu, FiUserPlus, FiCalendar } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
+import { setNavSize } from '../../redux/appSlide';
+import { RootState } from '../../redux/store';
+import NavItem from './SidebarItem';
 
 export default function Sidebar() {
     const router = useRouter()
@@ -48,10 +48,11 @@ export default function Sidebar() {
                             dispatch(setNavSize("small"))
                     }}
                 />
-                <NavItem href="/dashboard" navSize={navSize} icon={FiHome} title="Bảng điều khiển"  active={router.pathname === "/dashboard"}/>
-                <NavItem href="/branch" navSize={navSize} icon={AiOutlineShareAlt} title="Chi nhánh" active={router.pathname === "/branch"} />
-                <NavItem href="/load" navSize={navSize} icon={FiUserPlus} title="Thêm ứng viên" active={router.pathname === "/load"} />
-                <NavItem href="/candidate" navSize={navSize} icon={FiCalendar} title="QL ứng viên" active={router.pathname === "/candidate"} />
+                <NavItem href="/dashboard" navSize={navSize} icon={FiHome} title="Bảng điều khiển"  active={router.pathname.includes("dashboard")}/>
+                <NavItem href="/branch" navSize={navSize} icon={AiOutlineShareAlt} title="Chi nhánh" active={router.pathname.includes("branch")} />
+                <NavItem href="/load" navSize={navSize} icon={FiUserPlus} title="Thêm ứng viên" active={router.pathname.includes("load")} />
+                <NavItem href="/candidate" navSize={navSize} icon={FiUsers} title="QL ứng viên" active={router.pathname.includes("candidate")} />
+                <NavItem href="/schedule" navSize={navSize} icon={FiCalendar} title="Lịch phỏng vấn" active={router.pathname.includes("schedule")} />
             </Flex>
         </Flex>
     )

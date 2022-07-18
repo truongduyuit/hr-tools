@@ -10,7 +10,6 @@ class Mongoose {
   public static init(options?: mongoose.ConnectOptions): void {
     if (!mongoose.connections[0].readyState) {
       mongoose.Promise = bluebird;
-      console.log("connectionString: ", connectionString)
       mongoose
         .connect(connectionString, {
           user,

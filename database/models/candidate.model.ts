@@ -22,9 +22,10 @@ export interface ICandidateModel extends mongoose.Document {
   brand: string;
   linkCV: string;
   haveSchedule: boolean;
-  haveCv: boolean;
   scheduleId: string;
   scheduleInfo: any;
+  position: string;
+  status: string
 }
 
 const schema = new mongoose.Schema(
@@ -97,11 +98,14 @@ const schema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    haveCv: {
-      type: Boolean,
-      default: false,
-    },
     scheduleId: { type: mongoose.Types.ObjectId },
+    position: {
+      type: String,
+    },
+    status: {
+      type: String,
+      default: "0"
+    }
   },
   {
     collection: "candidate",

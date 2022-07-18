@@ -102,3 +102,24 @@ export enum StoreType {
 export const Positions = ["Part time", "Full time", "Captain", "Store Supervisor", "Store Manager", "Acting AM", "AM"]
 
 export const Brands = ["Chuk", "Bánh mì ơi", "Xôi"]
+
+export const CandidateConfigLabel:any = {
+  timeApply: 'Thời gian apply',
+  email: 'Email',
+  phone: 'Số điện thoại',
+  workType: 'Loại hình làm việc',
+  workArea: 'Khu vực đi làm',
+  name: 'Họ và tên',
+  dob: 'Ngày sinh',
+  gender: 'Giới tính',
+  placeOfBirth: 'Nơi sinh',
+  heightWeight: 'Chiều cao / Cân nặng',
+  know: 'Biết thông tin tuyển dụng',
+  time: 'Làm việc',
+  exp: 'Kinh ngiệm làm việc',
+  desiredSalary: 'Mức lương mong muốn',
+  ssRotate: 'Sẵn sàng luân chuyển',
+  ssWorkTime: 'Linh động giờ làm',
+  brand: 'Thương hiệu ứng tuyển',
+  linkCV: 'Link CV'
+}

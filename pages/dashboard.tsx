@@ -22,13 +22,16 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FaCalendarAlt, FaCalendarWeek, FaDailymotion } from "react-icons/fa";
+import { useDispatch } from "react-redux";
 import Sidebar from "../components/sidebar";
 import { StatsCard } from "../components/stas";
 import { IScheduleModel } from "../database";
+import { setLoading } from "../redux/appSlide";
 import { getStartEndDate, getStartEndMonth, getStartEndWeek } from "../utils";
 
 export default function Dashboard() {
   const toast = useToast();
+  const dispatch= useDispatch();
   const [schedules, setSchedules] = useState<IScheduleModel[]>([]);
   const [totalDate, setTotalDate] = useState<string>("0");
   const [totalWeek, setTotalWeek] = useState<string>("0");
@@ -37,6 +40,7 @@ export default function Dashboard() {
   useEffect(() => {
     loadStat();
     getScheduleToday();
+    dispatch(setLoading(false))
   }, []);
 
   const loadStat = async () => {

@@ -7,12 +7,13 @@ export interface IScheduleModel extends mongoose.Document {
   interviewBranchId: mongoose.Types.ObjectId;
   date: Date;
   note: string;
-  isPass: string;
+  isPass: boolean;
   candidateInfo: any;
   workBranchInfo: any;
   interviewBranchInfo: any;
   position: string;
   selectBrand: string;
+  haveJobFile: boolean;
 }
 
 const schema = new mongoose.Schema(
@@ -36,10 +37,17 @@ const schema = new mongoose.Schema(
     note: {
       type: String,
     },
-    isPass: {
-      type: String,
-      default: "Chưa có kết quả",
+    haveJobFile: {
+      type: Boolean,
+      default: false,
     },
+    isPass: {
+      type: Boolean,
+    },
+    status: {
+      type: Boolean,
+      default: true
+    }
   },
   {
     collection: "schedule",

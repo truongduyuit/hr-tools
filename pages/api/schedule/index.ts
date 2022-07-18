@@ -30,7 +30,15 @@ export default async function handler(
         position,
         selectBrand,
       } = req.body;
-
+console.log({
+  candidateId,
+  workBranchId,
+  interviewBranchId,
+  date,
+  note,
+  position,
+  selectBrand,
+})
       const schedule = await ScheduleFunctions.create(
         {
           candidateId,
@@ -49,6 +57,7 @@ export default async function handler(
         {
           haveSchedule: true,
           scheduleId: schedule._id,
+          position
         },
         { session }
       );
@@ -57,25 +66,42 @@ export default async function handler(
       await session.commitTransaction();
       session.endSession();
     } else if (req.method === "GET") {
-      const { fromDate, toDate } = req.query;
+      const { fromDate, toDate, candidateId } = req.query;
+
+      let query = {} as any;
+
+      if (candidateId) {
+        query = {
+          ...query,
+          candidateId
+        };
+      }
+
+      if (fromDate && toDate) {
+        query = {
+          ...query,
+          $and: [
+            { date: { $gt: fromDate } },
+            { date: { $lte: toDate } }
+          ]
+        };
+      } else if (fromDate) {
+        query = {
+          ...query,
+          date: { $gt: fromDate }
+        };
+      } else if (toDate) {
+        query = {
+          ...query,
+          date: { $lte: toDate }
+        };
+      }
+
       result = await ScheduleFunctions.populate({
         page: 0, limit: 10,
-        query: {
-          $and: [
-            {
-              date: {
-                $gte: fromDate,
-              },
-            },
-            {
-              date: {
-                $lte: toDate,
-              },
-            },
-          ],
-        },
+        query,
         sort: {
-          date: 1,
+          date: -1,
         },
         populate: [
           {

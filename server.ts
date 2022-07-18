@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import next from "next";
 import { loadEnvConfig } from "@next/env";
 loadEnvConfig("./", process.env.NODE_ENV !== "production");
+import cors from "cors";
+import compression from "compression";
 
 import { Mongoose } from "./database";
 
@@ -16,6 +18,8 @@ const handle = app.getRequestHandler();
   try {
     await app.prepare();
     const server = express();
+    server.use(cors());
+    server.use(compression())
 
     await Mongoose.init();
     server.all("*", (req: Request, res: Response) => {

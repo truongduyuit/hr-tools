@@ -14,7 +14,7 @@ class Mongoose {
         .connect(connectionString, {
           user,
           pass,
-
+          connectTimeoutMS: 1000 * 60,
           ...options,
         })
         .then(() => {

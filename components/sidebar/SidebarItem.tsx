@@ -20,7 +20,7 @@ export default function NavItem({ icon, title, active, navSize, href }: any) {
             >
                 <Menu placement="right">
                     <Box
-                        backgroundColor={active ? "teal": "#ccc"}
+                        backgroundColor={active ? "teal" : "#ccc"}
                         p={3}
                         borderRadius={8}
                         _hover={{ textDecor: 'none', backgroundColor: "#AAA", cursor: "pointer" }}

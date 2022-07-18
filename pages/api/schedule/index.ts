@@ -30,15 +30,6 @@ export default async function handler(
         position,
         selectBrand,
       } = req.body;
-console.log({
-  candidateId,
-  workBranchId,
-  interviewBranchId,
-  date,
-  note,
-  position,
-  selectBrand,
-})
       const schedule = await ScheduleFunctions.create(
         {
           candidateId,
